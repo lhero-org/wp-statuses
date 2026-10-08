@@ -182,8 +182,21 @@ function wp_statuses_register_password_protected() {
  * Map the registered statuses to WP_Statuses_Core_Status objects.
  *
  * @since 1.0.0
+ * @since 2.2.0 Ignores change_locale before the statuses are first registered.
  */
 function wp_statuses_register() {
+	/*
+	 * A locale switch during init (GatherPress does one while building its venue
+	 * rewrite slug) fires change_locale before every post type is registered.
+	 * Converting the statuses then would freeze the post_type lists of the
+	 * built-in statuses, which are computed once on conversion, so post types
+	 * registered later would lose Draft, Pending and Publish. Ignore
+	 * change_locale until the real registration on init has run.
+	 */
+	if ( doing_action( 'change_locale' ) && ! did_action( 'wp_statuses_registered' ) ) {
+		return;
+	}
+
 	global $wp_post_statuses;
 
 	$wp_post_statuses = array_map( 'wp_statuses_get', $wp_post_statuses );
@@ -350,6 +363,7 @@ function wp_statuses_is_public( $status = '' ) {
  * Unregisters a status for the given list of post type names.
  *
  * @since 1.3.0
+ * @since 2.2.0 Unregistering publish no longer also unregisters draft and pending.
  *
  * @param  string $status    The status name
  * @param  array  $post_type A list of post type names.
@@ -368,10 +382,6 @@ function wp_statuses_unregister_status_for_post_type( $status = '', $post_type =
 
 	if ( ! isset( $wp_post_statuses[ $status ]->post_type ) || ! $post_types ) {
 		return false;
-	}
-
-	if ( 'publish' === $status ) {
-		$statuses = array_merge( $statuses, array( 'draft', 'pending' ) );
 	}
 
 	foreach ( $statuses as $s ) {

@@ -1,17 +1,17 @@
 <?php
 /*
 Plugin Name: WP Statuses
-Plugin URI: https://imathi.eu/tag/wp-statuses/
-Description: Suggestions to improve the WordPress Post statuses API.
-Version: 2.1.9
+Plugin URI: https://github.com/lhero-org/wp-statuses
+Description: Suggestions to improve the WordPress Post statuses API. Maintained fork of imath/wp-statuses.
+Version: 2.2.0
 Requires at least: 5.0
 Tested up to: 6.6
 License: GNU/GPL 2
-Author: imath
-Author URI: https://imathi.eu/
+Author: imath, LocalHero
+Author URI: https://github.com/lhero-org/wp-statuses
 Text Domain: wp-statuses
 Domain Path: /languages/
-GitHub Plugin URI: https://github.com/imath/wp-statuses/
+GitHub Plugin URI: https://github.com/lhero-org/wp-statuses/
 */
 
 // Exit if accessed directly.
@@ -130,7 +130,7 @@ final class WP_Statuses {
 	 */
 	private function setup_globals() {
 		// Version
-		$this->version = '2.1.9';
+		$this->version = '2.2.0';
 
 		// Domain
 		$this->domain = 'wp-statuses';
@@ -233,12 +233,21 @@ final class WP_Statuses {
 
 endif;
 
+if ( ! function_exists( 'wp_statuses' ) ) :
 /**
  * Boot the plugin.
  *
  * @since 1.0.0
+ * @since 2.2.0 Guarded, so that several bundled copies can be included.
  */
 function wp_statuses() {
 	return WP_Statuses::start();
 }
-add_action( 'plugins_loaded', 'wp_statuses', 5 );
+endif;
+
+// Loaded by loader.php during plugins_loaded: boot now. Otherwise boot as before.
+if ( did_action( 'plugins_loaded' ) ) {
+	wp_statuses();
+} else {
+	add_action( 'plugins_loaded', 'wp_statuses', 5 );
+}

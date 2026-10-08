@@ -1,17 +1,29 @@
 {
-    "name": "imath/wp-statuses",
-    "description": "WordPress plugin to ease Custom Post Statuses integration",
-    "type": "wordpress-plugin",
-    "license": "GNU/GPL v2",
+    "name": "lhero-org/wp-statuses",
+    "description": "Maintained fork of imath/wp-statuses: an improved custom post statuses API for WordPress, safe to bundle in several plugins at once.",
+    "type": "library",
+    "license": "GPL-2.0-only",
+    "homepage": "https://github.com/lhero-org/wp-statuses",
+    "keywords": ["wordpress", "post-status", "custom-post-status", "block-editor"],
     "authors": [
         {
             "name": "imath",
             "email": "contact@imathi.eu",
-            "homepage": "https://imathi.eu"
+            "homepage": "https://imathi.eu",
+            "role": "Original author"
+        },
+        {
+            "name": "LocalHero",
+            "homepage": "https://lhero.org",
+            "role": "Maintainer"
         }
     ],
+    "support": {
+        "issues": "https://github.com/lhero-org/wp-statuses/issues",
+        "source": "https://github.com/lhero-org/wp-statuses"
+    },
     "minimum-stability": "stable",
     "require": {
-      "php": ">=5.6.20"
+        "php": ">=5.6.20"
     }
 }
